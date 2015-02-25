@@ -19,7 +19,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "ProductServlet", urlPatterns = {"/ProductServlet"})
 public class ProductServlet extends HttpServlet {
-
+    //VARIABLES FOR MANUALLY IMPLEMENTED METHODS
+    String result;
+    String url;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -75,6 +78,18 @@ public class ProductServlet extends HttpServlet {
         processRequest(request, response);
     }
 
+    //MANUALLY GENERATED doPut AND doDelete METHODS---------------
+    String doPut(String id, String name, String desc, int quan) {
+        
+        return url;
+    }
+    
+    String doDelete(String id) {
+        
+        return result;
+    }
+    //------------------------------------------------------------
+    
     /**
      * Returns a short description of the servlet.
      *
