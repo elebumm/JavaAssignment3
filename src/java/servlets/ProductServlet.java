@@ -39,8 +39,7 @@ public class ProductServlet extends HttpServlet {
                     out.println(getResults("SELECT * FROM product"));
                 } else {
                     String id = request.getParameter("id");
-                    out.println(getResults("SELECT * FROM product WHERE ProductID = ?", id));
-                     
+                    out.println(getResults("SELECT * FROM product WHERE ProductID = ?", id));  
                 }
             } catch (IOException ex){
                  Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,7 +67,6 @@ public class ProductServlet extends HttpServlet {
                     out.println("Error: problem inserting values.");
                     response.setStatus(500);
                 }
-            
             }
             else {
                 out.println("Error: Cannot post. Insufficient data.");
@@ -132,6 +130,7 @@ public class ProductServlet extends HttpServlet {
         return sb.toString();
     }
     
+    @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Set<String> keySet = request.getParameterMap().keySet();
         try (PrintWriter out = response.getWriter()) {
