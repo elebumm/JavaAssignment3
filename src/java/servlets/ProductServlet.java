@@ -61,8 +61,7 @@ public class ProductServlet extends HttpServlet {
                     + quantity + "');");
                 try {
                     pstmt.executeUpdate();
-                    
-                    
+                    out.println("http://localhost:8080/Assignment-3/products/" + request.getParameter("id"));
                 } catch (SQLException ex) {
                     Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
                     out.println("Error: problem inserting values.");
@@ -95,7 +94,7 @@ public class ProductServlet extends HttpServlet {
                     + productid + "';");
                 try {
                     pstmt.executeUpdate();
-                    doGet(request, response);
+                    out.println("http://localhost:8080/Assignment-3/products/" + request.getParameter("id"));
                 } catch (SQLException ex) {
                     Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
                     out.println("Error: cannot update values.");
