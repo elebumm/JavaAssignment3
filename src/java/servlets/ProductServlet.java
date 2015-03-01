@@ -139,6 +139,7 @@ public class ProductServlet extends HttpServlet {
                 PreparedStatement pstmt = conn.prepareStatement("DELETE FROM products WHERE productId = " + request.getParameter("productId"));
                 try {
                     pstmt.executeUpdate();
+                    out.println("");
                 } catch (SQLException ex) {
                     Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
                     out.println("Error deleting entry");
