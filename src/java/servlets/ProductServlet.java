@@ -65,7 +65,7 @@ public class ProductServlet extends HttpServlet {
                 PreparedStatement pstmt = conn.prepareStatement("INSERT INTO product ('Name', 'Description', 'Quantity') VALUES ('"
                     + name + "', '"
                     + description + "', '"
-                    + quantity + "')");
+                    + quantity + "');");
                 try {
                     pstmt.executeUpdate();
                 } catch (SQLException ex) {
@@ -88,9 +88,37 @@ public class ProductServlet extends HttpServlet {
     
     
     //MANUALLY GENERATED doPut AND doDelete METHODS---------------
-    String doPut(String id, String name, String desc, int quan) {
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Set<String> keySet = request.getParameterMap().keySet();
+        try (PrintWriter out = response.getWriter()) {
+            Connection conn = getConnection();
+            if (keySet.contains("productid") && keySet.contains("name") && keySet.contains("description") && keySet.contains("quantity")) {
+                String productid = request.getParameter("id");
+                String name = request.getParameter("name");
+                String description = request.getParameter("description");
+                String quantity = request.getParameter("quantity");
+                PreparedStatement pstmt = conn.prepareStatement("UPDATE product SET Name='" 
+                    + name + "', Description'"
+                    + description + "', Quantity'"
+                    + quantity + "' WHERE ProductID = '"
+                    + productid + "';");
+                try {
+                    pstmt.executeUpdate();
+                    doGet(request, response);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    out.println("Error: cannot update values.");
+                    response.setStatus(500);
+                }
+            } else {
+                out.println("Error: insufficient parameters for update.");
+                response.setStatus(500);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        return url;
     }
     
     private String getResults(String query, String... params){
