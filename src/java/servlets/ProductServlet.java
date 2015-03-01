@@ -24,9 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Dylan
+ * @author Dylan Huculak - c0630163
  */
-@WebServlet(name = "ProductServlet", urlPatterns = {"/product"})
+@WebServlet(name = "ProductServlet", urlPatterns = {"/products"})
 public class ProductServlet extends HttpServlet {
     
     @Override
@@ -35,10 +35,10 @@ public class ProductServlet extends HttpServlet {
             response.setHeader("Content-Type", "text/plain-text");
             try (PrintWriter out = response.getWriter()) {
                 if (!request.getParameterNames().hasMoreElements()){
-                    out.println(getResults("SELECT * FROM product"));
+                    out.println(getResults("SELECT * FROM products"));
                 } else {
                     String id = request.getParameter("id");
-                    out.println(getResults("SELECT * FROM product WHERE ProductID = ?", id));  
+                    out.println(getResults("SELECT * FROM product WHERE productId = ?", id));  
                 }
             } catch (IOException ex){
                  Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -55,12 +55,14 @@ public class ProductServlet extends HttpServlet {
                 String name = request.getParameter("name");
                 String description = request.getParameter("description");
                 String quantity = request.getParameter("quantity");
-                PreparedStatement pstmt = conn.prepareStatement("INSERT INTO product ('Name', 'Description', 'Quantity') VALUES ('"
+                PreparedStatement pstmt = conn.prepareStatement("INSERT INTO products ('name', 'description', 'quantity') VALUES ('"
                     + name + "', '"
                     + description + "', '"
                     + quantity + "');");
                 try {
                     pstmt.executeUpdate();
+                    
+                    
                 } catch (SQLException ex) {
                     Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
                     out.println("Error: problem inserting values.");
@@ -81,15 +83,15 @@ public class ProductServlet extends HttpServlet {
         Set<String> keySet = request.getParameterMap().keySet();
         try (PrintWriter out = response.getWriter()) {
             Connection conn = getConnection();
-            if (keySet.contains("productid") && keySet.contains("name") && keySet.contains("description") && keySet.contains("quantity")) {
+            if (keySet.contains("productId") && keySet.contains("name") && keySet.contains("description") && keySet.contains("quantity")) {
                 String productid = request.getParameter("id");
                 String name = request.getParameter("name");
                 String description = request.getParameter("description");
                 String quantity = request.getParameter("quantity");
-                PreparedStatement pstmt = conn.prepareStatement("UPDATE product SET Name='" 
-                    + name + "', Description'"
-                    + description + "', Quantity'"
-                    + quantity + "' WHERE ProductID = '"
+                PreparedStatement pstmt = conn.prepareStatement("UPDATE product SET name='" 
+                    + name + "', description'"
+                    + description + "', quantity'"
+                    + quantity + "' WHERE productId = '"
                     + productid + "';");
                 try {
                     pstmt.executeUpdate();
@@ -134,8 +136,8 @@ public class ProductServlet extends HttpServlet {
         Set<String> keySet = request.getParameterMap().keySet();
         try (PrintWriter out = response.getWriter()) {
             Connection conn = getConnection();
-            if (keySet.contains("productID")) {
-                PreparedStatement pstmt = conn.prepareStatement("DELETE FROM product WHERE productID = " + request.getParameter("productID"));
+            if (keySet.contains("productId")) {
+                PreparedStatement pstmt = conn.prepareStatement("DELETE FROM products WHERE productId = " + request.getParameter("productId"));
                 try {
                     pstmt.executeUpdate();
                 } catch (SQLException ex) {
