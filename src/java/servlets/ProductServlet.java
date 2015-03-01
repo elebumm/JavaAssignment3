@@ -55,31 +55,36 @@ public class ProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String result;
         Set<String> keySet = request.getParameterMap().keySet();
         try (PrintWriter out = response.getWriter()) {
+            Connection conn = getConnection();
             if (keySet.contains("name") && keySet.contains("description") && keySet.contains("quantity")) {
                 String name = request.getParameter("name");
                 String description = request.getParameter("description");
                 String quantity = request.getParameter("quantity");
-                result = ("INSERT INTO product (Name, Description, Quantity) VALUES (?,?,?)", name, description, quantity);
-                
-                if (result.equalsIgnoreCase("BAD")){
+                PreparedStatement pstmt = conn.prepareStatement("INSERT INTO product ('Name', 'Description', 'Quantity') VALUES ('"
+                    + name + "', '"
+                    + description + "', '"
+                    + quantity + "')");
+                try {
+                    pstmt.executeUpdate();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    out.println("Error: problem inserting values.");
                     response.setStatus(500);
-                } else {
-                    out.println(result);
-                } 
+                }
             
             }
             else {
-                out.println("Error: Not enough data to input");
+                out.println("Error: Cannot post. Insufficient data.");
+                response.setStatus(500);
             }
-        } catch (IOException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-
+    
     
     
     //MANUALLY GENERATED doPut AND doDelete METHODS---------------
