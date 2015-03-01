@@ -29,27 +29,22 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "ProductServlet", urlPatterns = {"/product"})
 public class ProductServlet extends HttpServlet {
-    //VARIABLES FOR MANUALLY IMPLEMENTED METHODS
-    String result;
-    String url;
-    
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-             response.setHeader("Content-Type", "text/plain-text");
-             try (PrintWriter out = response.getWriter()) {
-                 if (!request.getParameterNames().hasMoreElements()){
-                     out.println(getResults("SELECT * FROM product"));
-                 }
-                 else {
-                     String id = request.getParameter("id");
-                     out.println(getResults("SELECT * FROM product WHERE ProductID = ?", id));
+            response.setHeader("Content-Type", "text/plain-text");
+            try (PrintWriter out = response.getWriter()) {
+                if (!request.getParameterNames().hasMoreElements()){
+                    out.println(getResults("SELECT * FROM product"));
+                } else {
+                    String id = request.getParameter("id");
+                    out.println(getResults("SELECT * FROM product WHERE ProductID = ?", id));
                      
-                 }
-             } catch (IOException ex){
+                }
+            } catch (IOException ex){
                  Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
-             }
+            }
     }
 
     @Override
@@ -83,11 +78,7 @@ public class ProductServlet extends HttpServlet {
             Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
     
-    
-    
-    //MANUALLY GENERATED doPut AND doDelete METHODS---------------
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Set<String> keySet = request.getParameterMap().keySet();
