@@ -83,7 +83,7 @@ public class ProductServlet extends HttpServlet {
         Set<String> keySet = request.getParameterMap().keySet();
         try (PrintWriter out = response.getWriter()) {
             Connection conn = getConnection();
-            if (keySet.contains("productId") && keySet.contains("name") && keySet.contains("description") && keySet.contains("quantity")) {
+            if (keySet.contains("id") && keySet.contains("name") && keySet.contains("description") && keySet.contains("quantity")) {
                 String productid = request.getParameter("id");
                 String name = request.getParameter("name");
                 String description = request.getParameter("description");
@@ -121,7 +121,7 @@ public class ProductServlet extends HttpServlet {
             ResultSet rs = pstmt.executeQuery();
             sb.append("[ ");
             while (rs.next()) {
-                sb.append(String.format("{ \"productId\" : %s, \"name\" : %s, \"description\" : %s, \"quantity\" : %s },\n", rs.getInt("ProductID"), rs.getString("Name"), rs.getString("Description"), rs.getInt("Quantity")));
+                sb.append(String.format("{ \"productId\" : %s, \"name\" : %s, \"description\" : %s, \"quantity\" : %s },\n", rs.getInt("productId"), rs.getString("name"), rs.getString("description"), rs.getInt("quantity")));
             }
             sb.setLength(Math.max(sb.length() - 2, 0));
             sb.append("]");
@@ -136,7 +136,7 @@ public class ProductServlet extends HttpServlet {
         Set<String> keySet = request.getParameterMap().keySet();
         try (PrintWriter out = response.getWriter()) {
             Connection conn = getConnection();
-            if (keySet.contains("productId")) {
+            if (keySet.contains("id")) {
                 PreparedStatement pstmt = conn.prepareStatement("DELETE FROM products WHERE productId = " + request.getParameter("productId"));
                 try {
                     pstmt.executeUpdate();
