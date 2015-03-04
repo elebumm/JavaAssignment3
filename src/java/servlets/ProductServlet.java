@@ -55,10 +55,11 @@ public class ProductServlet extends HttpServlet {
                 String name = request.getParameter("name");
                 String description = request.getParameter("description");
                 String quantity = request.getParameter("quantity");
-                PreparedStatement pstmt = conn.prepareStatement("INSERT INTO products ('name', 'description', 'quantity') VALUES ('"
-                    + name + "', '"
-                    + description + "', '"
-                    + quantity + "');");
+                                
+                PreparedStatement pstmt = conn.prepareStatement("INSERT INTO products ('name', 'description', 'quantity') VALUES (?, ?, ?)");
+                pstmt.setString(1, name);
+                pstmt.setString(2, description);
+                pstmt.setString(3, quantity);
                 try {
                     pstmt.executeUpdate();
                     out.println("http://localhost:8080/Assignment-3/products/" + request.getParameter("id"));
@@ -87,11 +88,11 @@ public class ProductServlet extends HttpServlet {
                 String name = request.getParameter("name");
                 String description = request.getParameter("description");
                 String quantity = request.getParameter("quantity");
-                PreparedStatement pstmt = conn.prepareStatement("UPDATE product SET name='" 
-                    + name + "', description'"
-                    + description + "', quantity'"
-                    + quantity + "' WHERE productId = '"
-                    + productid + "';");
+                PreparedStatement pstmt = conn.prepareStatement("UPDATE product SET name=?, description=?, quantity=? WHERE productId = ?");
+                pstmt.setString(1, name);
+                pstmt.setString(2, description);
+                pstmt.setString(3, quantity);
+                pstmt.setString(4, productid);
                 try {
                     pstmt.executeUpdate();
                     out.println("http://localhost:8080/Assignment-3/products/" + request.getParameter("id"));
@@ -136,7 +137,8 @@ public class ProductServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             Connection conn = getConnection();
             if (keySet.contains("id")) {
-                PreparedStatement pstmt = conn.prepareStatement("DELETE FROM products WHERE productId = " + request.getParameter("productId"));
+                PreparedStatement pstmt = conn.prepareStatement("DELETE FROM products WHERE productId = ?");
+                pstmt.setString(1, request.getParameter("productId"));
                 try {
                     pstmt.executeUpdate();
                     out.println("");
