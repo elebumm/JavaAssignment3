@@ -9,13 +9,17 @@ import credentials.Credentials;
 import static credentials.Credentials.getConnection;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,11 +35,10 @@ import javax.ws.rs.core.Response;
 public class Products {
 
     /**
-     *
+     * doGet that returns all rows from table when no id is given
      * @return
      */
     @GET
-    @Path("")
     @Produces("application/json")
     public Response doGet() {
         return Response.ok(getResults("SELECT * FROM products"),
@@ -43,7 +46,7 @@ public class Products {
     }
     
     /**
-     *
+     * doGet that returns row with id given
      * @param id
      * @return
      */
@@ -55,70 +58,51 @@ public class Products {
                 String.valueOf(id)), MediaType.APPLICATION_JSON).build();   
     }
 
+    /**
+     * doPost that inserts row with data given
+     * @param insert
+     * @return
+     */
     @POST
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Set<String> keySet = request.getParameterMap().keySet();
-        try (PrintWriter out = response.getWriter()) {
-            Connection conn = getConnection();
-            if (keySet.contains("name") && keySet.contains("description") && keySet.contains("quantity")) {
-                String name = request.getParameter("name");
-                String description = request.getParameter("description");
-                String quantity = request.getParameter("quantity");
-                                
-                PreparedStatement pstmt = conn.prepareStatement("INSERT INTO products ('name', 'description', 'quantity') VALUES (?, ?, ?)");
-                pstmt.setString(1, name);
-                pstmt.setString(2, description);
-                pstmt.setString(3, quantity);
-                try {
-                    pstmt.executeUpdate();
-                    out.println("http://localhost:8080/Assignment-3/products/" + request.getParameter("id"));
-                } catch (SQLException ex) {
-                    Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
-                    out.println("Error: problem inserting values.");
-                    response.setStatus(500);
-                }
-            }
-            else {
-                out.println("Error: Cannot post. Insufficient data.");
-                response.setStatus(500);
-            }
+    @Consumes("application/json")
+    public Response doPost(String insert) { 
+        JsonObject json = Json.createReader(new StringReader(insert))
+                .readObject();
+        try (Connection conn = getConnection()) {
+            PreparedStatement pstmt = conn
+                .prepareStatement("INSERT INTO products ('name', 'description', 'quantity') VALUES ("
+                + "'" + json.getString("name") + "',"
+                + "'" + json.getString("description") + "',"
+                + String.valueOf(json.getInt("quantity")) + ")",
+                    Statement.RETURN_GENERATED_KEYS);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Set<String> keySet = request.getParameterMap().keySet();
-        try (PrintWriter out = response.getWriter()) {
-            Connection conn = getConnection();
-            if (keySet.contains("id") && keySet.contains("name") && keySet.contains("description") && keySet.contains("quantity")) {
-                String productid = request.getParameter("id");
-                String name = request.getParameter("name");
-                String description = request.getParameter("description");
-                String quantity = request.getParameter("quantity");
-                PreparedStatement pstmt = conn.prepareStatement("UPDATE product SET name=?, description=?, quantity=? WHERE productId = ?");
-                pstmt.setString(1, name);
-                pstmt.setString(2, description);
-                pstmt.setString(3, quantity);
-                pstmt.setString(4, productid);
-                try {
-                    pstmt.executeUpdate();
-                    out.println("http://localhost:8080/Assignment-3/products/" + request.getParameter("id"));
-                } catch (SQLException ex) {
-                    Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
-                    out.println("Error: cannot update values.");
-                    response.setStatus(500);
-                }
-            } else {
-                out.println("Error: insufficient parameters for update.");
-                response.setStatus(500);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Products.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }
         
+        return Response.status(500).build();
+    }
+    
+    @PUT
+    @Path("{id}")
+    @Consumes("application/json")
+    public Response doPut(@PathParam("productId") int id, String update) {
+        JsonObject json = Json.createReader(new StringReader(update))
+                .readObject();
+        try (Connection conn = getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement("UPDATE products SET name='" 
+                + json.getString("name") + "'," + " description='" 
+                + json.getString("description") + "'," + " quantity=" 
+                + String.valueOf(json.getInt("quantity")) + "," + " WHERE productId = '" 
+                + id + "'", Statement.RETURN_GENERATED_KEYS);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Products.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+        
+        return Response.status(500).build();
     }
     
     private String getResults(String query, String... params){
@@ -136,13 +120,13 @@ public class Products {
             sb.setLength(Math.max(sb.length() - 2, 0));
             sb.append("]");
         } catch (SQLException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Products.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }
         return sb.toString();
     }
     
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public Response doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Set<String> keySet = request.getParameterMap().keySet();
         try (PrintWriter out = response.getWriter()) {
             Connection conn = getConnection();
@@ -153,7 +137,8 @@ public class Products {
                     pstmt.executeUpdate();
                     out.println("");
                 } catch (SQLException ex) {
-                    Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Products.class.getName())
+                            .log(Level.SEVERE, null, ex);
                     out.println("Error deleting entry");
                     response.setStatus(500);
                 }
@@ -163,7 +148,8 @@ public class Products {
             }
         }
         catch (SQLException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Products.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }
     }
             
