@@ -7,7 +7,6 @@ package services;
 
 import credentials.Credentials;
 import static credentials.Credentials.getConnection;
-import java.io.IOException;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
