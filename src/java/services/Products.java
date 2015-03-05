@@ -55,7 +55,7 @@ public class Products {
                 String.valueOf(id)), MediaType.APPLICATION_JSON).build();   
     }
 
-    @Override
+    @POST
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Set<String> keySet = request.getParameterMap().keySet();
