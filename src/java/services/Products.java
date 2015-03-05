@@ -50,8 +50,8 @@ public class Products {
     @Path("{id}")
     @Produces("application/json")
     public Response doGet(@PathParam("productId") int id) {
-        return Response.ok(getResults("SELECT * FROM products WHERE productId = ?", 
-                String.valueOf(id)), MediaType.APPLICATION_JSON).build();   
+        return Response.ok(getResults("SELECT * FROM products WHERE productId = " 
+                + String.valueOf(id)), MediaType.APPLICATION_JSON).build();   
     }
 
     /** 
