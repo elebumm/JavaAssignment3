@@ -32,7 +32,7 @@ public class Products {
 
     /**
      * doGet that returns all rows from table when no id is given
-     * @return
+     * @return Response from SELECT statement
      */
     @GET
     @Produces("application/json")
@@ -42,9 +42,9 @@ public class Products {
     }
     
     /**
-     * doGet that returns row with id given
+     * @doGet that returns row of id given
      * @param id
-     * @return
+     * @return Response from SELECT FROM WHERE statement
      */
     @GET
     @Path("{id}")
@@ -54,10 +54,10 @@ public class Products {
                 String.valueOf(id)), MediaType.APPLICATION_JSON).build();   
     }
 
-    /**
+    /** 
      * doPost that inserts row with data given
      * @param insert
-     * @return
+     * @return Response 500 if method completes (should not complete if INSERT successful)
      */
     @POST
     @Consumes("application/json")
@@ -80,6 +80,12 @@ public class Products {
         return Response.status(500).build();
     }
     
+    /**
+     * doPut method that updates row of id given with data given
+     * @param id
+     * @param update
+     * @return Response 500 if method completes (should not complete if INSERT successful)
+     */
     @PUT
     @Path("{id}")
     @Consumes("application/json")
@@ -122,6 +128,11 @@ public class Products {
         return sb.toString();
     }
     
+    /**
+     * doDelete method that deletes row of id given
+     * @param id
+     * @return empty string for a successful deletion
+     */
     @DELETE
     @Path("{id}")
     @Consumes("application/json")
