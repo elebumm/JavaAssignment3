@@ -8,24 +8,20 @@ package services;
 import credentials.Credentials;
 import static credentials.Credentials.getConnection;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 /**
  *
@@ -126,31 +122,26 @@ public class Products {
         return sb.toString();
     }
     
-    public Response doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Set<String> keySet = request.getParameterMap().keySet();
-        try (PrintWriter out = response.getWriter()) {
-            Connection conn = getConnection();
-            if (keySet.contains("id")) {
-                PreparedStatement pstmt = conn.prepareStatement("DELETE FROM products WHERE productId = ?");
-                pstmt.setString(1, request.getParameter("productId"));
-                try {
-                    pstmt.executeUpdate();
-                    out.println("");
-                } catch (SQLException ex) {
-                    Logger.getLogger(Products.class.getName())
-                            .log(Level.SEVERE, null, ex);
-                    out.println("Error deleting entry");
-                    response.setStatus(500);
-                }
-            } else {
-                out.println("No data to delete");
-                response.setStatus(500);
+    @DELETE
+    @Path("{id}")
+    @Consumes("application/json")
+    public Response doDelete(@PathParam("productId") int id) throws IOException {
+        try (Connection conn = getConnection()) {
+            PreparedStatement pstmt = conn
+                .prepareStatement("DELETE FROM products WHERE productId = " + (id)); 
+            try {
+                pstmt.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(Products.class.getName())
+                    .log(Level.SEVERE, null, ex);
+                   return Response.status(500).build();
             }
         }
         catch (SQLException ex) {
             Logger.getLogger(Products.class.getName())
-                    .log(Level.SEVERE, null, ex);
+                .log(Level.SEVERE, null, ex);
         }
+        return Response.status(Status.OK).entity("").build();
     }
             
 }
