@@ -147,7 +147,7 @@ public class Products {
             } catch (SQLException ex) {
                 Logger.getLogger(Products.class.getName())
                     .log(Level.SEVERE, null, ex);
-                   return Response.status(500).build();
+                return Response.status(500).build();
             }
         }
         catch (SQLException ex) {
