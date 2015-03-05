@@ -137,10 +137,11 @@ public class Products {
     @DELETE
     @Path("{id}")
     @Consumes("application/json")
-    public Response doDelete(@PathParam("productId") int id) throws IOException {
+    public Response doDelete(@PathParam("productId") int id) {
         try (Connection conn = getConnection()) {
             PreparedStatement pstmt = conn
-                .prepareStatement("DELETE FROM products WHERE productId = " + (id)); 
+                .prepareStatement("DELETE FROM products WHERE productId = " 
+                    + String.valueOf(id)); 
             try {
                 pstmt.executeUpdate();
             } catch (SQLException ex) {
