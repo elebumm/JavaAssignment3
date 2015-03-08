@@ -20,11 +20,12 @@ public class Credentials {
     public static Connection getConnection() {
         Connection conn = null;
         try {
-            Class.forName("gator3119.hostgator.com");
+            Class.forName("com.mysql.jdbc.Driver");
+            String jdbc = "jdbc:mysql://gator3119.hostgator.com/rbp_cpro";
             String db = "rbp_cpro";
             String user = "rbp_cprouser";
             String pass = "Cpro_1";
-            conn = DriverManager.getConnection(db, user, pass);
+            conn = DriverManager.getConnection(jdbc, user, pass);
         }
         catch (ClassNotFoundException | SQLException ex){
             Logger.getLogger(Credentials.class.getName()).log(Level.SEVERE, null, ex);
