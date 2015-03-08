@@ -106,7 +106,7 @@ public class Products {
     @Path("{id}")
     @Consumes("application/json")
     public Response doPut(@PathParam("id") int id, String update) {
-        Response postResponse;
+        Response putResponse;
         JsonObject json = Json.createReader(new StringReader(update))
                 .readObject();
         try (Connection conn = getConnection()) {
@@ -118,14 +118,14 @@ public class Products {
             
             pstmt.executeUpdate();
             
-            postResponse = Response.ok("http://localhost:8080/Assignment-3/products/" + id ).build();
+            putResponse = Response.ok("http://localhost:8080/Assignment-3/products/" + id ).build();
         } catch (SQLException ex) {
             Logger.getLogger(Products.class.getName())
                     .log(Level.SEVERE, null, ex);
-            postResponse = Response.status(500).build();
+            putResponse = Response.status(500).build();
         }
         
-        return postResponse;
+        return putResponse;
     }
     
     private String getResults(String query, String... params){
@@ -158,23 +158,20 @@ public class Products {
     @Path("{id}")
     @Consumes("application/json")
     public Response doDelete(@PathParam("id") int id) {
+        Response delResponse;
         try (Connection conn = getConnection()) {
             PreparedStatement pstmt = conn
                 .prepareStatement("DELETE FROM products WHERE productId = " 
                     + String.valueOf(id)); 
-            try {
-                pstmt.executeUpdate();
-            } catch (SQLException ex) {
-                Logger.getLogger(Products.class.getName())
-                    .log(Level.SEVERE, null, ex);
-                return Response.status(500).build();
-            }
-        }
-        catch (SQLException ex) {
+            pstmt.executeUpdate();
+            delResponse = Response.status(Status.OK).entity("").build();
+        } catch (SQLException ex) {
             Logger.getLogger(Products.class.getName())
                 .log(Level.SEVERE, null, ex);
+            delResponse = Response.status(500).build();
         }
-        return Response.status(Status.OK).entity("").build();
+        
+        return delResponse;
     }
             
 }
