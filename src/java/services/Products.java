@@ -105,7 +105,7 @@ public class Products {
     @PUT
     @Path("{id}")
     @Consumes("application/json")
-    public Response doPut(@PathParam("productId") int id, String update) {
+    public Response doPut(@PathParam("id") int id, String update) {
         Response postResponse;
         JsonObject json = Json.createReader(new StringReader(update))
                 .readObject();
