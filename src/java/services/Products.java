@@ -61,7 +61,9 @@ public class Products {
      */
     @POST
     @Consumes("application/json")
-    public Response doPost(String insert) { 
+    public Response doPost(String insert) {
+        Response postResponse;
+        int maxId = 0;
         JsonObject json = Json.createReader(new StringReader(insert))
                 .readObject();
         try (Connection conn = getConnection()) {
@@ -71,13 +73,21 @@ public class Products {
                 + "'" + json.getString("description") + "',"
                 + String.valueOf(json.getInt("quantity")) + ")",
                     Statement.RETURN_GENERATED_KEYS);
-
+                // Get highest id (autoincremented id of last row)
+                Statement checkId = conn.createStatement();
+                checkId.execute("SELECT MAX(productId) FROM products");
+                ResultSet checkIdResults = checkId.getResultSet();
+                if ( checkIdResults.next() ) {
+                    maxId = checkIdResults.getInt(1);
+                }
+                postResponse = Response.ok("http://localhost:8080/Assignment-3/products/" + String.valueOf(maxId) ).build();
         } catch (SQLException ex) {
             Logger.getLogger(Products.class.getName())
                     .log(Level.SEVERE, null, ex);
+            postResponse = Response.status(500).build();
         }
         
-        return Response.status(500).build();
+        return postResponse;
     }
     
     /**
