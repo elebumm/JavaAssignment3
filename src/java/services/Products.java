@@ -68,7 +68,7 @@ public class Products {
                 .readObject();
         try (Connection conn = getConnection()) {
             PreparedStatement pstmt = conn
-                .prepareStatement("INSERT INTO products ('name','description','quantity') VALUES ("
+                .prepareStatement("INSERT INTO products (name,description,quantity) VALUES ("
                 + "'" + json.getString("name") + "',"
                 + "'" + json.getString("description") + "',"
                 + String.valueOf(json.getInt("quantity")) + ")",
