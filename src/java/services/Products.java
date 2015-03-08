@@ -153,7 +153,7 @@ public class Products {
         return delResponse;
     }
     
-    private String getResults(String query, String... params){
+    private String getResults(String query, String... params) {
         StringBuilder sb = new StringBuilder();
         try (Connection conn = Credentials.getConnection()){
             PreparedStatement pstmt = conn.prepareStatement(query);
