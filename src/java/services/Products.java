@@ -73,7 +73,7 @@ public class Products {
                 + "'" + json.getString("description") + "',"
                 + String.valueOf(json.getInt("quantity")) + ")",
                     Statement.RETURN_GENERATED_KEYS);
-            
+                System.out.println(pstmt);
                 // Get highest id (autoincremented id of last row)
                 Statement checkId = conn.createStatement();
                 checkId.execute("SELECT MAX(productId) FROM products");
