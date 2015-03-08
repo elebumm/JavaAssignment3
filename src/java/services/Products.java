@@ -78,7 +78,9 @@ public class Products {
             
                 // Get highest id (autoincremented id of last row)
                 Statement checkId = conn.createStatement();
-                checkId.execute("SELECT MAX(productId) FROM products WHERE name = '" + json.getString("name") + "'");
+                checkId.execute("SELECT MAX(productId) FROM products WHERE name = '" + json.getString("name") 
+                        + "' AND description = '" + json.getString("description") 
+                        + "' AND quantity = " + json.getInt("quantity"));
                 ResultSet checkIdResults = checkId.getResultSet();
                 if ( checkIdResults.next() ) {
                     maxId = checkIdResults.getInt(1);
