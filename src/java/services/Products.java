@@ -173,13 +173,5 @@ public class Products {
         
         return delResponse;
     }
-    
-    @DELETE
-    @Path("{oops}")
-    @Consumes("application/json")
-    public Response doDelete(@PathParam("oops") String mistake) {
-        
-        return Response.status(500).build();
-    }
             
 }
