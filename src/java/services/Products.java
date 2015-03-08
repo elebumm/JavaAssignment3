@@ -157,7 +157,7 @@ public class Products {
     @DELETE
     @Path("{id}")
     @Consumes("application/json")
-    public Response doDelete(@PathParam("productId") int id) {
+    public Response doDelete(@PathParam("id") int id) {
         try (Connection conn = getConnection()) {
             PreparedStatement pstmt = conn
                 .prepareStatement("DELETE FROM products WHERE productId = " 
