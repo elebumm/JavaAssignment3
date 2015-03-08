@@ -84,7 +84,7 @@ public class Products {
                     maxId = checkIdResults.getInt(1);
                 } 
                 
-                postResponse = Response.ok("http://localhost:8080/Assignment-3/products/" + String.valueOf(maxId) + " " + pstmt ).build();
+                postResponse = Response.ok("http://localhost:8080/Assignment-3/products/" + String.valueOf(maxId) ).build();
         } catch (SQLException ex) {
             Logger.getLogger(Products.class.getName())
                     .log(Level.SEVERE, null, ex);
