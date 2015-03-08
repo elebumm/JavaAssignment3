@@ -48,7 +48,7 @@ public class Products {
     @GET
     @Path("{id}")
     @Produces("application/json")
-    public Response doGet(@PathParam("productId") int id) {
+    public Response doGet(@PathParam("id") int id) {
         return Response.ok(getResults("SELECT * FROM products WHERE productId = " 
                 + String.valueOf(id)),
                     MediaType.APPLICATION_JSON).build();   
@@ -68,18 +68,20 @@ public class Products {
                 .readObject();
         try (Connection conn = getConnection()) {
             PreparedStatement pstmt = conn
-                .prepareStatement("INSERT INTO products ('name', 'description', 'quantity') VALUES ("
+                .prepareStatement("INSERT INTO products ('name','description','quantity') VALUES ("
                 + "'" + json.getString("name") + "',"
                 + "'" + json.getString("description") + "',"
                 + String.valueOf(json.getInt("quantity")) + ")",
                     Statement.RETURN_GENERATED_KEYS);
+            
                 // Get highest id (autoincremented id of last row)
                 Statement checkId = conn.createStatement();
                 checkId.execute("SELECT MAX(productId) FROM products");
                 ResultSet checkIdResults = checkId.getResultSet();
                 if ( checkIdResults.next() ) {
                     maxId = checkIdResults.getInt(1);
-                }
+                } 
+                
                 postResponse = Response.ok("http://localhost:8080/Assignment-3/products/" + String.valueOf(maxId) ).build();
         } catch (SQLException ex) {
             Logger.getLogger(Products.class.getName())
