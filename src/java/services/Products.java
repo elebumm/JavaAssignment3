@@ -106,21 +106,26 @@ public class Products {
     @Path("{id}")
     @Consumes("application/json")
     public Response doPut(@PathParam("productId") int id, String update) {
+        Response postResponse;
         JsonObject json = Json.createReader(new StringReader(update))
                 .readObject();
         try (Connection conn = getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement("UPDATE products SET name='" 
                 + json.getString("name") + "'," + " description='" 
                 + json.getString("description") + "'," + " quantity=" 
-                + String.valueOf(json.getInt("quantity")) + "," + " WHERE productId = '" 
-                + id + "'", Statement.RETURN_GENERATED_KEYS);
-
+                + String.valueOf(json.getInt("quantity")) + "," + " WHERE productId = " 
+                + id , Statement.RETURN_GENERATED_KEYS);
+            
+            pstmt.executeUpdate();
+            
+            postResponse = Response.ok("http://localhost:8080/Assignment-3/products/" + id ).build();
         } catch (SQLException ex) {
             Logger.getLogger(Products.class.getName())
                     .log(Level.SEVERE, null, ex);
+            postResponse = Response.status(500).build();
         }
         
-        return Response.status(500).build();
+        return postResponse;
     }
     
     private String getResults(String query, String... params){
