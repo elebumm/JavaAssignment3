@@ -113,7 +113,7 @@ public class Products {
             PreparedStatement pstmt = conn.prepareStatement("UPDATE products SET name='" 
                 + json.getString("name") + "'," + " description='" 
                 + json.getString("description") + "'," + " quantity=" 
-                + String.valueOf(json.getInt("quantity")) + "," + " WHERE productId = " 
+                + String.valueOf(json.getInt("quantity")) + " WHERE productId = " 
                 + id , Statement.RETURN_GENERATED_KEYS);
             
             pstmt.executeUpdate();
