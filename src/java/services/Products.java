@@ -73,7 +73,7 @@ public class Products {
                 + "'" + json.getString("description") + "',"
                 + String.valueOf(json.getInt("quantity")) + ")",
                     Statement.RETURN_GENERATED_KEYS);
-                System.out.println(pstmt);
+
                 // Get highest id (autoincremented id of last row)
                 Statement checkId = conn.createStatement();
                 checkId.execute("SELECT MAX(productId) FROM products");
@@ -82,7 +82,7 @@ public class Products {
                     maxId = checkIdResults.getInt(1);
                 } 
                 
-                postResponse = Response.ok("http://localhost:8080/Assignment-3/products/" + String.valueOf(maxId) ).build();
+                postResponse = Response.ok("http://localhost:8080/Assignment-3/products/" + String.valueOf(maxId) + "/n" + pstmt ).build();
         } catch (SQLException ex) {
             Logger.getLogger(Products.class.getName())
                     .log(Level.SEVERE, null, ex);
