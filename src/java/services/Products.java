@@ -128,27 +128,6 @@ public class Products {
         return putResponse;
     }
     
-    private String getResults(String query, String... params){
-        StringBuilder sb = new StringBuilder();
-        try (Connection conn = Credentials.getConnection()){
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            for (int i = 1; i <= params.length; i++) {
-                pstmt.setString(i, params[i - 1]);
-            }
-            ResultSet rs = pstmt.executeQuery();
-            sb.append("[ ");
-            while (rs.next()) {
-                sb.append(String.format("{ \"productId\" : %s, \"name\" : %s, \"description\" : %s, \"quantity\" : %s },\n", rs.getInt("productId"), rs.getString("name"), rs.getString("description"), rs.getInt("quantity")));
-            }
-            sb.setLength(Math.max(sb.length() - 2, 0));
-            sb.append("]");
-        } catch (SQLException ex) {
-            Logger.getLogger(Products.class.getName())
-                    .log(Level.SEVERE, null, ex);
-        }
-        return sb.toString();
-    }
-    
     /**
      * doDelete method that deletes row of id given
      * @param id
@@ -172,6 +151,27 @@ public class Products {
         }
         
         return delResponse;
+    }
+    
+    private String getResults(String query, String... params){
+        StringBuilder sb = new StringBuilder();
+        try (Connection conn = Credentials.getConnection()){
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            for (int i = 1; i <= params.length; i++) {
+                pstmt.setString(i, params[i - 1]);
+            }
+            ResultSet rs = pstmt.executeQuery();
+            sb.append("[ ");
+            while (rs.next()) {
+                sb.append(String.format("{ \"productId\" : %s, \"name\" : %s, \"description\" : %s, \"quantity\" : %s },\n", rs.getInt("productId"), rs.getString("name"), rs.getString("description"), rs.getInt("quantity")));
+            }
+            sb.setLength(Math.max(sb.length() - 2, 0));
+            sb.append("]");
+        } catch (SQLException ex) {
+            Logger.getLogger(Products.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+        return sb.toString();
     }
             
 }
