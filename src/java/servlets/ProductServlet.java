@@ -34,12 +34,14 @@ public class ProductServlet extends HttpServlet {
             throws ServletException, IOException {
             response.setHeader("Content-Type", "text/plain-text");
             try (PrintWriter out = response.getWriter()) {
+                Connection conn = getConnection();
                 if (!request.getParameterNames().hasMoreElements()){
                     out.println(getResults("SELECT * FROM products"));
                 } else {
                     String id = request.getParameter("id");
                     out.println(getResults("SELECT * FROM product WHERE productId = ?", id));  
                 }
+                conn.close();
             } catch (IOException ex){
                  Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
