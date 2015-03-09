@@ -126,12 +126,12 @@ public class ProductServlet extends HttpServlet {
                 pstmt.setString(i, params[i - 1]);
             }
             ResultSet rs = pstmt.executeQuery();
-            sb.append("[ ");
+            sb.append("[\n");
             while (rs.next()) {
-                sb.append(String.format("{ \"productId\" : \"%s\", "
-                        + "\"name\" : \"%s\", "
-                        + "\"description\" : \"%s\", "
-                        + "\"quantity\" : \"%s\" },\n", 
+                sb.append(String.format("{\n\"productId\" : \"%s\",\n"
+                        + "\"name\" : \"%s\",\n"
+                        + "\"description\" : \"%s\",\n"
+                        + "\"quantity\" : \"%s\"\n},\n", 
                         rs.getInt("productId"), 
                         rs.getString("name"), 
                         rs.getString("description"), 
