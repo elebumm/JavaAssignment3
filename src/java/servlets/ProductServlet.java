@@ -42,7 +42,7 @@ public class ProductServlet extends HttpServlet {
                     out.println(getResults("SELECT * FROM product WHERE productId = ?", id));  
                 }
                 conn.close();
-            } catch (IOException ex){
+            } catch (SQLException ex){
                  Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
