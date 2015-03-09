@@ -81,11 +81,14 @@ public class ProductServlet extends HttpServlet {
     }
     
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException, ServletException {
         Set<String> keySet = request.getParameterMap().keySet();
         try (PrintWriter out = response.getWriter()) {
             Connection conn = getConnection();
-            if (keySet.contains("id") && keySet.contains("name") && keySet.contains("description") && keySet.contains("quantity")) {
+            if (keySet.contains("id") && keySet.contains("name") 
+                    && keySet.contains("description") 
+                    && keySet.contains("quantity")) {
                 String productid = request.getParameter("id");
                 String name = request.getParameter("name");
                 String description = request.getParameter("description");
@@ -97,7 +100,8 @@ public class ProductServlet extends HttpServlet {
                     + productid + "';");
                 try {
                     pstmt.executeUpdate();
-                    out.println("http://localhost:8080/JavaAssignment3/products/" + request.getParameter("id"));
+                    out.println("http://localhost:8080/JavaAssignment3/products/" 
+                            + request.getParameter("id"));
                 } catch (SQLException ex) {
                     Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
                     out.println("Error: cannot update values.");
@@ -143,12 +147,15 @@ public class ProductServlet extends HttpServlet {
     }
     
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException {
         Set<String> keySet = request.getParameterMap().keySet();
         try (PrintWriter out = response.getWriter()) {
             Connection conn = getConnection();
             if (keySet.contains("id")) {
-                PreparedStatement pstmt = conn.prepareStatement("DELETE FROM products WHERE productId = " + request.getParameter("productId"));
+                PreparedStatement pstmt = conn.prepareStatement(
+                        "DELETE FROM products WHERE productId = " 
+                        + request.getParameter("productId"));
                 try {
                     pstmt.executeUpdate();
                     out.println("");
