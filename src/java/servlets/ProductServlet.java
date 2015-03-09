@@ -72,6 +72,7 @@ public class ProductServlet extends HttpServlet {
                 out.println("Error: Cannot post. Insufficient data.");
                 response.setStatus(500);
             }
+            conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -104,6 +105,7 @@ public class ProductServlet extends HttpServlet {
                 out.println("Error: insufficient parameters for update.");
                 response.setStatus(500);
             }
+            conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -131,6 +133,7 @@ public class ProductServlet extends HttpServlet {
             }
             sb.setLength(Math.max(sb.length() - 2, 0));
             sb.append("]");
+            conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -156,6 +159,7 @@ public class ProductServlet extends HttpServlet {
                 out.println("No data to delete");
                 response.setStatus(500);
             }
+            conn.close();
         }
         catch (SQLException ex) {
             Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
