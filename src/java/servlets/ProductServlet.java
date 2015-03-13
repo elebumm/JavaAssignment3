@@ -21,6 +21,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Produces;
 
 /**
  *
@@ -29,22 +33,12 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ProductServlet", urlPatterns = {"/products"})
 public class ProductServlet extends HttpServlet {
     
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-            response.setHeader("Content-Type", "text/plain-text");
-            try (PrintWriter out = response.getWriter()) {
-                Connection conn = getConnection();
-                if (!request.getParameterNames().hasMoreElements()){
-                    out.println(getResults("SELECT * FROM products"));
-                } else {
-                    String id = request.getParameter("id");
-                    out.println(getResults("SELECT * FROM product WHERE productId = ?", id));  
-                }
-                conn.close();
-            } catch (SQLException ex){
-                 Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
+  
+    
+    @GET
+    @Produces("application/json")
+    protected String doGet() {
+        return getResults("SELECT * FROM products");
     }
 
     @Override
@@ -80,7 +74,9 @@ public class ProductServlet extends HttpServlet {
         }
     }
     
-    @Override
+    @PUT
+    @PATH("{id}")
+    @Consumes("application/json")
     protected void doPut(HttpServletRequest request, HttpServletResponse response) 
             throws IOException, ServletException {
         Set<String> keySet = request.getParameterMap().keySet();
